@@ -14,7 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Khangvn20/DevOps-Final.git'
             }
         }
-          stage('Build Docker Image') {
+             stage('Build Docker Image') {
             steps {
                 script {
                     echo 'Building Docker image for linux/amd64 platform...'
@@ -22,12 +22,14 @@ pipeline {
                 }
             }
         }
-     stage('Run Tests') {
+
+        stage('Run Tests') {
             steps {
                 echo 'Running tests...'
             }
         }
-     stage('Push to Docker Hub') {
+
+        stage('Push to Docker Hub') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
@@ -37,20 +39,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Assuming you have configured Docker Hub credentials in Jenkins
-                    // Use your Docker Hub username/organization
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest')
-                    }
-                }
-            }
-        }
-
-            stage('Deploy Golang to DEV') {
+        stage('Deploy Golang to DEV') {
             steps {
                 script {
                     echo 'Clearing server_golang-related images and containers...'
@@ -64,11 +53,12 @@ pipeline {
                     sh '''
                         docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                         docker network create dev || echo "Network already exists"
-                        docker container run -d --rm --name server-golang -p 3005:3005 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker container run -d --rm --name server-golang -p 4000:4000 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
                     '''
                 }
             }
         }
+
         stage('Deploy to Production on AWS') {
             steps {
                 script {
@@ -87,7 +77,6 @@ pipeline {
             }
         }
     }
-
 
     post {
         always {
