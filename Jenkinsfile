@@ -4,8 +4,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'vikhang21/devops-book'
         DOCKER_TAG = 'latest'
-        PROD_SEVER="ec2-16-176-9-36.ap-southeast-2.compute.amazonaws.com"
-        PROD_USER="ubuntu"
+        PROD_SEVER='ec2-16-176-9-36.ap-southeast-2.compute.amazonaws.com'
+        PROD_USER='ubuntu'
     }
 
     stages {
