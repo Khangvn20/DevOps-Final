@@ -64,30 +64,29 @@ pipeline {
                     sh '''
                         docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                         docker network create dev || echo "Network already exists"
-                        docker container run -d --rm --name server-golang -p 4000:4000 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker container run -d --rm --name server-golang -p 3005:3005 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
                     '''
                 }
             }
         }
-        stage('Deploy Golang to PROD') {
+        stage('Deploy to Production on AWS') {
             steps {
                 script {
-                    echo 'Clearing server_golang-related images and containers...'
-                    sh '''
-                        docker container stop server-golang || echo "No container named server-golang to stop"
-                        docker container rm server-golang || echo "No container named server-golang to remove"
-                        docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} || echo "No image ${DOCKER_IMAGE}:${DOCKER_TAG} to remove"
-                    '''
-                    
-                    echo 'Deploying to PROD environment...'
-                    sh '''
-                        docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker network create prod || echo "Network already exists"
-                        docker container run -d --rm --name server-golang -p 5000:5000 --network prod ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    '''
+                    echo 'Deploying to Production...'
+                    sshagent(['aws-ssh-key']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_SERVER} << EOF
+                                docker container stop server-golang || echo "No container to stop"
+                                docker container rm server-golang || echo "No container to remove"
+                                docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} || echo "No image to remove"
+                                docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                                docker container run -d --rm --name server-golang -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        '''
+                    }
                 }
             }
         }
+    }
 
 
     post {
