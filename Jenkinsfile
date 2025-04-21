@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'vikhang21/devops-book'
-        DOCKER_TAG = "latest"
+        DOCKER_TAG = 'latest'
         PROD_SEVER="ec2-16-176-9-36.ap-southeast-2.compute.amazonaws.com"
         PROD_USER="ubuntu"
     }
@@ -14,7 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Khangvn20/DevOps-Final.git'
             }
         }
-             stage('Build Docker Image') {
+                  stage('Build Docker Image') {
             steps {
                 script {
                     echo 'Building Docker image for linux/amd64 platform...'
