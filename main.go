@@ -19,7 +19,18 @@ func main() {
 	router := gin.Default()
 
 	// Sample data
-	books = append(books, Book{ID: "1", Title: "Golang Programming", Author: "John Doe", Price: 29.99})
+	books = append(books, []Book{
+		{ID: "1", Title: "Golang Programming", Author: "John Doe", Price: 29.99},
+		{ID: "2", Title: "Python Basics", Author: "Jane Smith", Price: 24.99},
+		{ID: "3", Title: "JavaScript Advanced", Author: "Mike Johnson", Price: 34.99},
+		{ID: "4", Title: "Docker in Practice", Author: "Sarah Williams", Price: 39.99},
+		{ID: "5", Title: "DevOps Handbook", Author: "Tom Davis", Price: 44.99},
+		{ID: "6", Title: "Microservices Architecture", Author: "Alice Brown", Price: 49.99},
+		{ID: "7", Title: "Cloud Computing", Author: "Robert Wilson", Price: 54.99},
+		{ID: "8", Title: "Kubernetes Guide", Author: "Emily Clark", Price: 45.99},
+		{ID: "9", Title: "API Design Patterns", Author: "David Miller", Price: 32.99},
+		{ID: "10", Title: "System Design", Author: "Lisa Anderson", Price: 59.99},
+	}...)
 
 	// Define API routes
 	api := router.Group("/api")
@@ -32,7 +43,8 @@ func main() {
 	}
 
 	// Start server
-	router.Run(":8080")
+	router.Run(":3005")
+	
 }
 
 func getBooks(c *gin.Context) {
