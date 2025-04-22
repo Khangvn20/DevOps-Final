@@ -4,8 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'vikhang21/devops-book'
         DOCKER_TAG = 'latest'
-        PROD_SERVER='ec2-16-176-9-224.ap-southeast-2.compute.amazonaws.com'
-        PROD_USER='ubuntu'
     }
 
     stages {
@@ -58,25 +56,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy to Production on AWS') {
-            steps {
-                script {
-                    echo 'Deploying to Production...'
-                    sshagent(['aws-ssh-key']) {
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_SERVER} << EOF
-                                docker container stop server-golang || echo "No container to stop"
-                                docker container rm server-golang || echo "No container to remove"
-                                docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} || echo "No image to remove"
-                                docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                                docker container run -d --rm --name server-golang -p 3005:3005 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        '''
-                    }
-                }
-            }
-        }
-    }
 
     post {
         always {
