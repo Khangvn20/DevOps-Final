@@ -51,7 +51,7 @@ pipeline {
                     sh '''
                         docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                         docker network create dev || echo "Network already exists"
-                        docker container run -d --rm --name server-golang -p 4000:4000 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker container run -d --rm --name server-golang -p 3005:3005 --network dev ${DOCKER_IMAGE}:${DOCKER_TAG}
                     '''
                 }
             }
