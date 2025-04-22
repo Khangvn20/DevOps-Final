@@ -70,7 +70,7 @@ pipeline {
                                 docker container rm server-golang || echo "No container to remove"
                                 docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} || echo "No image to remove"
                                 docker image pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                                docker container run -d --rm --name server-golang -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                                docker container run -d --rm --name server-golang -p 3005:3005 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         '''
                     }
                 }
